@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Team</title>
+    <link rel="stylesheet" href="inc/styles.css">
+</head>
+<body data-theme="dark">
+    <header class="header">
+        <div class="logo">
+            Electro Akrout
+        </div>
+        <div class="controls">
+            <button class="lang-toggle" onclick="toggleLanguage()">
+                <span class="lang-text">EN</span>
+            </button>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <img src="https://cdn-icons-png.flaticon.com/128/667/667421.png" alt="Dark Mode" class="theme-icon">
+            </button>
+        </div>
+    </header>
+
+    <h4 class="tagline">❤ | Your trusted source for electronics ⚡, expert TV repairs 📺, and reliable security installations 🔒.</h4>
+
+    <div class="social-grid">
+        <a href="https://www.instagram.com/electroakrout/?utm_source=ig_web_button_share_sheet" style="text-decoration: none;">
+            <div class="social-card">
+                <img src="https://cdn-icons-png.flaticon.com/128/15707/15707749.png" alt="Instagram">
+                <h3 style="color: #fff;">Instagram</h3>
+                <p>@electroakrout</p>
+            </div>
+        </a>
+            
+        <a href="https://www.tiktok.com/@electro.akrout?is_from_webapp=1&sender_device=pc" style="text-decoration: none;">  
+            <div class="social-card">
+                <img src="https://cdn-icons-png.flaticon.com/128/3670/3670132.png" alt="TikTok">
+                <h3 style="color: #fff;">Tiktok</h3>
+                <p>@electro.akrout</p>
+            </div>
+        </a>
+        
+    </div>
+
+    <div class="contact-section">
+        <button onclick="openWhatsAppModal()" class="whatsapp-button">
+            <img src="https://cdn-icons-png.flaticon.com/128/1384/1384055.png" alt="WhatsApp" style="width: 24px; height: 24px;">
+            96 831 686
+        </button>
+        <a target="_blank" href="https://mail.google.com/mail/u/0/#inbox?compose=DXDwSWwxrMCVZvFmxdHwLRzHqWTtzTfZPMFRmHrhbxPnvVTJTtMmhJZcQccmfpgncKjKBmVQlqmWgpQHtxsLxsJVKKktNgXtHDspMfFRtXlRRrcpJHszfGkg" class="email-button">
+            <img src="https://cdn-icons-png.flaticon.com/128/5968/5968534.png" alt="Gmail" style="width: 24px; height: 24px;">
+            link.team47@gmail.com
+        </a>
+    </div>
+
+    <div class="map-container">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194.5726885029!2d10.1806794!3d36.8602822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12e2cd293a670aaf%3A0x7dcd4bbf49f86f4d!2sElectro+Akrout!5e0!3m2!1sen!2sus!4v1651234567890!5m2!1sen!2sus"
+        width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+
+    </div>
+
+    <button onclick="getDirections()" class="directions-button">
+        <img src="https://cdn-icons-png.flaticon.com/128/786/786407.png" alt="Directions" style="width: 24px; height: 24px;">
+        Get Directions
+    </button>
+
+    <footer>
+        © 2024 Electro Akrout
+    </footer>
+
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeWhatsAppModal()">&times;</span>
+            <h2>Contact us on WhatsApp</h2>
+            <img src="img/telegram.jpg" alt="WhatsApp QR Code" style="width: 200px; height: 200px; margin: 20px auto; display: block;">
+            <button onclick="sendWhatsAppMessage()" class="whatsapp-button" style="width: 100%;">
+                Send Message
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                tagline: "❤ | Your trusted source for electronics ⚡, expert TV repairs 📺, and reliable security installations 🔒.",
+                getDirections: "Get Directions",
+                contactWhatsApp: "Contact us on WhatsApp",
+                sendMessage: "Send Message"
+            },
+            fr: {
+                tagline: "❤ | Votre source de confiance pour l'électronique ⚡, les réparations TV 📺, et les installations de sécurité fiables 🔒.",
+                getDirections: "Obtenir l'itinéraire",
+                contactWhatsApp: "Contactez-nous sur WhatsApp",
+                sendMessage: "Envoyer un message"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'fr' : 'en';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            document.querySelector('.tagline').textContent = translations[currentLang].tagline;
+            document.querySelector('.directions-button').textContent = translations[currentLang].getDirections;
+            document.querySelector('.modal-content h2').textContent = translations[currentLang].contactWhatsApp;
+            document.querySelector('.modal-content .whatsapp-button').textContent = translations[currentLang].sendMessage;
+            document.querySelector('.lang-toggle .lang-text').textContent = currentLang.toUpperCase();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.src = 'https://cdn-icons-png.flaticon.com/128/667/667421.png';
+                themeIcon.alt = 'Dark Mode';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.src = 'https://cdn-icons-png.flaticon.com/128/869/869767.png';
+                themeIcon.alt = 'Light Mode';
+            }
+        }
+
+        function getDirections() {
+            const destination = "36.8602822,10.1806794"; // Tunis, Tunisia coordinates
+            
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const origin = position.coords.latitude + "," + position.coords.longitude;
+                    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
+                    window.open(url, '_blank');
+                }, function(error) {
+                    console.error("Error: ", error);
+                    const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving`;
+                    window.open(url, '_blank');
+                });
+            } else {
+                const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving`;
+                window.open(url, '_blank');
+            }
+        }
+
+        function openWhatsAppModal() {
+            document.getElementById('whatsappModal').style.display = 'block';
+        }
+
+        function closeWhatsAppModal() {
+            document.getElementById('whatsappModal').style.display = 'none';
+        }
+
+        function sendWhatsAppMessage() {
+            const phoneNumber = '96831686'; // Replace with your actual WhatsApp number
+            const message = encodeURIComponent('Hello, I am your new client');
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('whatsappModal')) {
+                closeWhatsAppModal();
+            }
+        }
+
+        // Initialize with dark mode
+        document.body.setAttribute('data-theme', 'dark');
+    </script>
+</body>
+</html>
