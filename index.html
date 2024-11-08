@@ -3,13 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electro akrout</title>
+    <title>Electro Akrout</title>
     <link rel="stylesheet" href="inc/styles.css">
+    <style>
+/* Container adjustments for larger screens */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.product-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* 4:3 Aspect Ratio */
+    overflow: hidden;
+}
+
+.product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.product-image.active {
+    opacity: 1;
+}
+
+.product-info {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.product-description {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+/* Preview button styling */
+.preview-button {
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center; /* Center text horizontally */
+    align-items: center;     /* Center text vertically */
+    gap: 1rem;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: fadeInUp 1s ease-out 0.5s both;
+    background-color: #ffffff;
+    color: black;
+    text-align: center; /* Center-align text if it spans multiple lines */
+}
+
+.preview-button:hover {
+    background-color: black;
+    color: #fff;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh; /* Set maximum height for modal */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    animation: slideDown 0.3s ease-out;
+}
+
+.close {
+    color: var(--text-color-secondary);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--text-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-image-container {
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.modal-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.modal-image.active {
+    opacity: 1;
+}
+
+.modal-details h2 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.modal-details p {
+    color: var(--text-color-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.image-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.5rem;
+}
+
+.image-nav-button.left {
+    left: 10px;
+}
+
+.image-nav-button.right {
+    right: 10px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 1rem;
+    }
+
+    .product-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .product-info {
+        padding: 1rem;
+    }
+
+    .preview-button {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+
+    .modal-image-container {
+        padding-top: 75%; /* Adjust for mobile screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+    }
+
+    .product-info {
+        padding: 0.75rem;
+    }
+
+    .product-name {
+        font-size: 1.1rem;
+    }
+
+    .product-description {
+        font-size: 0.85rem;
+    }
+
+    .preview-button {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .image-nav-button {
+        font-size: 1.25rem;
+        padding: 0.4rem;
+    }
+
+    .modal-content {
+        width: 98%;
+    }
+
+    .modal-image-container {
+        padding-top: 100%; /* Adjust for smaller screens */
+    }
+}
+
+    </style>
 </head>
 <body data-theme="dark">
     <header class="header">
         <div class="logo">
-            <img src="Logo.png" />
+            <img src="img/logo1.png" alt="Electro Akrout Logo" class="logo-img" />
+
             Electro Akrout
         </div>
         <div class="controls">
@@ -23,6 +312,65 @@
     </header>
 
     <h4 class="tagline">❤ | Your trusted source for electronics ⚡, expert TV repairs 📺, and reliable security installations 🔒.</h4>
+
+    <section class="product-grid">
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="img/tv.jpg" alt="TV" class="product-image active">
+                <button class="image-nav-button left" onclick="changeImage(this, -1)">&lt;</button>
+                <button class="image-nav-button right" onclick="changeImage(this, 1)">&gt;</button>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Repair TV</h3>
+                <p class="product-description">Réparation de TV 📺, LED 💡, LCD 🖥️, QLED, etc. ! Faites confiance à notre expertise pour redonner vie à vos appareils !</p>
+                <button class="preview-button" onclick="openModal('repair-tv')"><img src="https://cdn-icons-png.flaticon.com/128/3342/3342361.png" width="30" /> Preview</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="img/x96q/55dfd3f9-f85c-f.jpg" alt="X96Q pro 1" class="product-image active">
+                <img src="img/x96q/faefaefaef.jpg" alt="X96Q pro 2" class="product-image">
+                <button class="image-nav-button left" onclick="changeImage(this, -1)">&lt;</button>
+                <button class="image-nav-button right" onclick="changeImage(this, 1)">&gt;</button>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">X96Q pro</h3>
+                <p class="product-description">Box TV Android X96Q Pro + Alpha tv, talimiya, Diwan, shahid. 🌐 Android 10.0, ⚙️ Allwinner H313 Quad-Core, 🧠 2 Go RAM, 💾 16 Go Flash, 📺 Ultra HD 4K</p>
+                <button class="preview-button" onclick="openModal('x96q-pro')"><img src="https://cdn-icons-png.flaticon.com/128/3342/3342361.png" width="30" /> Preview</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="img/t40/ef5ad9e8-25f8-41c9-b3fb.jpg" alt="Starsat T-40 extreme 1" class="product-image active">
+                <img src="img/t40/e1375d15-1ee1-4570.jpg" alt="Starsat T-40 extreme 2" class="product-image">
+                <img src="img/t40/b7fee162-8ac5-458.jpg" alt="Starsat T-40 extreme 3" class="product-image">
+                <button class="image-nav-button left" onclick="changeImage(this, -1)">&lt;</button>
+                <button class="image-nav-button right" onclick="changeImage(this, 1)">&gt;</button>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Starsat T-40 extreme</h3>
+                <p class="product-description">Full HD 1080p 🌟, DVB-S/S2, MPEG-4, H.264/AVC 📺, 4:3/16:9 Auto 🖥️, 100+ satellites 🛰️, 4000 transpondeurs 📡, 6000 chaînes 📺</p>
+                <button class="preview-button" onclick="openModal('starsat-t40')"><img src="https://cdn-icons-png.flaticon.com/128/3342/3342361.png" width="30" /> Preview</button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-image-container">
+                <img src="" alt="" class="modal-image active">
+                <button class="image-nav-button left" onclick="changeModalImage(-1)">&lt;</button>
+                <button class="image-nav-button right" onclick="changeModalImage(1)">&gt;</button>
+            </div>
+            <div class="modal-details">
+                <h2></h2>
+                <p></p>
+            </div>
+        </div>
+    </div>
 
     <div class="social-grid">
         <a href="https://www.instagram.com/electroakrout/?utm_source=ig_web_button_share_sheet" style="text-decoration: none;">
@@ -40,7 +388,6 @@
                 <p>@electro.akrout</p>
             </div>
         </a>
-        
     </div>
 
     <div class="contact-section">
@@ -60,7 +407,6 @@
         width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
     </iframe>
-
     </div>
 
     <button onclick="getDirections()" class="directions-button">
@@ -117,17 +463,23 @@
         function toggleTheme() {
             const body = document.body;
             const themeIcon = document.querySelector('.theme-icon');
+            const logo = document.querySelector('.logo-img'); // Select the logo image
 
             if (body.getAttribute('data-theme') === 'light') {
                 body.setAttribute('data-theme', 'dark');
                 themeIcon.src = 'https://cdn-icons-png.flaticon.com/128/667/667421.png';
                 themeIcon.alt = 'Dark Mode';
+                logo.src = 'img/logo1.png'; // Set dark mode logo
+                logo.alt = 'Electro Akrout Dark Logo';
             } else {
                 body.setAttribute('data-theme', 'light');
                 themeIcon.src = 'https://cdn-icons-png.flaticon.com/128/869/869767.png';
                 themeIcon.alt = 'Light Mode';
+                logo.src = 'img/logo2.png'; // Set light mode logo
+                logo.alt = 'Electro Akrout Light Logo';
             }
         }
+
 
         function getDirections() {
             const destination = "36.8602822,10.1806794"; // Tunis, Tunisia coordinates
@@ -162,15 +514,148 @@
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         }
 
+        function startSlideshow() {
+            const slideshows = document.querySelectorAll('.product-image-container, .modal-image-container');
+            slideshows.forEach(slideshow => {
+                let currentSlide = 0;
+                const slides = slideshow.querySelectorAll('img');
+                if (slides.length > 1) {
+                    setInterval(() => {
+                        slides[currentSlide].classList.remove('active');
+                        currentSlide = (currentSlide + 1) % slides.length;
+                        slides[currentSlide].classList.add('active');
+                    }, 3000);
+                }
+            });
+        }
+
+        function changeImage(button, direction) {
+            const container = button.closest('.product-image-container');
+            const images = container.querySelectorAll('.product-image');
+            let currentIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
+            
+            images[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            images[currentIndex].classList.add('active');
+        }
+
+        const productDetails = {
+            'repair-tv': {
+                name: 'Repair TV',
+                description: 'Réparation de TV 📺, LED 💡, LCD 🖥️, QLED, etc. ! Faites confiance à notre expertise pour redonner vie à vos appareils !',
+                images: ['img/tv.jpg']
+            },
+            'x96q-pro': {
+                name: 'X96Q pro',
+                description: 'X96Q PRO Box TV Android X96Q Pro + Alpha tv, talimiya, Diwan, shahid. 🌐 Système d\'exploitation: Android 10.0 ⚙️ Processeur: Allwinner H313 Quad-Core Arm Cortex-A53 🧠 Mémoire RAM: 2 Go 💾 Mémoire Flash: 16 Go 📺 Affichage: Ultra HD 4K 🔄 Décodage: H.265 4K 📹 Applications: YouTube 📶 Connectivité: Wi-Fi 2.4/5 GHz 🌐 Ethernet: Prise en charge 10 / 100M 🔄 Mise à niveau: Micrologiciel en ligne (OTA) 🔌 Connecteurs: 2 x USB, 1 x HDMI, 1 x RJ45 🖤 Couleur: Noir',
+                images: ['img/x96q/55dfd3f9-f85c-f.jpg', 'img/x96q/faefaefaef.jpg']
+            },
+            'starsat-t40': {
+                name: 'Starsat T-40 extreme',
+                description: 'Starsat T-40 extreme Résolution: Full HD 1080p 🌟 DVB-S/S2: Entièrement MPEG-4, H.264/AVC 📺 Options: Balayage automatique et manuel des canaux 🔄 Format d\'écran: 4:3/16:9 Auto 🖥️ Mémoire de stockage: Plus de 100 satellites 🛰️ Transpondeurs: 4 000 📡 Chaînes: 6 000 📺 Multi Screen: Oui 🖥️📱 Connectivité: 2x USB 2.0 🔌 + Commande + Câble HDMI 📺 + Sans Clé Wifi 🌐 Abonnement: 12 MOIS SHARING 💳 + 3 MOIS IPTV 📅',
+                images: ['img/t40/ef5ad9e8-25f8-41c9-b3fb.jpg', 'img/t40/e1375d15-1ee1-4570.jpg', 'img/t40/b7fee162-8ac5-458.jpg']
+            },
+            'alpha': {
+                name: 'Alpha',
+                description: 'Alpha + Diwan + Taalimya + Shahid',
+                images: ['img/alpha/faefaefaef.jpg']
+            }
+        };
+
+        let currentModalImageIndex = 0;
+        let currentProductImages = [];
+        let currentProductId = '';
+
+        function changeModalImage(direction) {
+            const modalImageContainer = document.querySelector('.modal-image-container');
+            const modalImages = modalImageContainer.querySelectorAll('.modal-image');
+            
+            modalImages[currentModalImageIndex].classList.remove('active');
+            currentModalImageIndex = (currentModalImageIndex + direction + currentProductImages.length) % currentProductImages.length;
+            modalImages[currentModalImageIndex].classList.add('active');
+            
+            // Update all image sources
+            modalImages.forEach((img, index) => {
+                img.src = currentProductImages[index];
+                img.alt = `${productDetails[currentProductId].name} ${index + 1}`;
+            });
+        }
+
+        function openModal(productId) {
+            const modal = document.getElementById('productModal');
+            const product = productDetails[productId];
+            const modalImageContainer = modal.querySelector('.modal-image-container');
+            const modalTitle = modal.querySelector('h2');
+            const modalDescription = modal.querySelector('p');
+
+            currentProductId = productId;
+            currentProductImages = product.images;
+            currentModalImageIndex = 0;
+
+            // Clear existing images
+            modalImageContainer.innerHTML = '';
+
+            // Add new images
+            currentProductImages.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = `${product.name} ${index + 1}`;
+                img.className = `modal-image ${index === 0 ? 'active' : ''}`;
+                modalImageContainer.appendChild(img);
+            });
+
+            modalTitle.textContent = product.name;
+            modalDescription.textContent = product.description;
+
+            modal.style.display = 'block';
+
+            // Show/hide navigation buttons based on the number of images
+            const navButtons = modal.querySelectorAll('.image-nav-button');
+            navButtons.forEach(button => {
+                button.style.display = product.images.length > 1 ? 'block' : 'none';
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
         // Close modal when clicking outside of it
         window.onclick = function(event) {
-            if (event.target == document.getElementById('whatsappModal')) {
+            const whatsappModal = document.getElementById('whatsappModal');
+            const productModal = document.getElementById('productModal');
+            if (event.target == whatsappModal) {
                 closeWhatsAppModal();
+            } else if (event.target == productModal) {
+                closeModal();
             }
+        }
+
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
         }
 
         // Initialize with dark mode
         document.body.setAttribute('data-theme', 'dark');
+
+        // Start slideshows
+        startSlideshow();
+
+        // Call animation function when the page loads
+        window.addEventListener('load', animateOnScroll);
+
+        // Event listeners for modal navigation buttons
+        document.querySelector('.modal-image-container .image-nav-button.left').addEventListener('click', () => changeModalImage(-1));
+        document.querySelector('.modal-image-container .image-nav-button.right').addEventListener('click', () => changeModalImage(1));
+
+        // Initialize language
+        updateLanguage();
     </script>
 </body>
 </html>
